@@ -34,3 +34,7 @@ PORT=
 
 PostgreSQL con migraciones y seeds gestionados con Prisma.
 # prueba de protección
+
+## Estado del proyecto 📌
+
+Este repositorio se encuentra preparado para trabajar con flujo Git basado en ramas, Pull Requests y protección de la rama main.
