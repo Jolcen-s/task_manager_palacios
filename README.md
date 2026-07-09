@@ -33,3 +33,4 @@ PORT=
 ## Base de datos 🗄️
 
 PostgreSQL con migraciones y seeds gestionados con Prisma.
+# prueba de protección
