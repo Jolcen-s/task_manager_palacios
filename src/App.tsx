@@ -19,7 +19,6 @@ type BackendTask = {
 const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
-  const incidentePipeline =
   const [tasks, setTasks] = useState<Task[]>([]);
   const [warning, setWarning] = useState("");
 
