@@ -34,4 +34,3 @@ PORT=
 
 PostgreSQL con migraciones y seeds gestionados con Prisma.
 # prueba de protección
-# prueba de protección
