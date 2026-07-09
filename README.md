@@ -2,7 +2,7 @@
 
 Aplicación web para gestionar tareas, permitiendo registrar, organizar y dar seguimiento a actividades pendientes del usuario.
 
-<!-- BADGE_CI -->
+[![CI](https://github.com/Jolcen-s/task_manager_palacios/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Jolcen-s/task_manager_palacios/actions/workflows/ci.yml)
 
 ## Instalación local 🚀
 
