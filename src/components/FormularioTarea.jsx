@@ -7,7 +7,7 @@ export default function FormularioTarea({ onAgregar }) {
     evento.preventDefault()
 
     if (titulo.trim()) {
-      onAgregar(titulo)
+      onAgregar(titulo.trim())
       setTitulo('')
     }
   }

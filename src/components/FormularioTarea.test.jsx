@@ -27,4 +27,17 @@ describe('FormularioTarea', () => {
 
     expect(onAgregar).not.toHaveBeenCalled()
   })
+  it('envia el titulo sin espacios al inicio o final', async () => {
+    const onAgregar = vi.fn()
+    const usuario = userEvent.setup()
+
+    render(<FormularioTarea onAgregar={onAgregar} />)
+
+    const input = screen.getByLabelText('Nueva tarea')
+    await usuario.type(input, '   Comprar leche   ')
+    await usuario.click(screen.getByText('Agregar'))
+
+    expect(onAgregar).toHaveBeenCalledWith('Comprar leche')
+  })
+
 })
