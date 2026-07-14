@@ -39,3 +39,9 @@ backend/.env.*
 *.njsproj
 *.sln
 *.sw?
+# Reportes de cobertura
+coverage/
+
+# Playwright
+playwright-report/
+test-results/
