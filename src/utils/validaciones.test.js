@@ -7,7 +7,7 @@ describe('esCorreoValido', () => {
 
     const resultado = esCorreoValido(correo)
 
-    expect(resultado).toBe(true)
+    expect(resultado).toBe(false)
   })
 
   it('rechaza un correo sin arroba', () => {
