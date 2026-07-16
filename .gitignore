@@ -45,3 +45,6 @@ coverage/
 # Playwright
 playwright-report/
 test-results/
+
+# AI tooling memory
+.atl/
