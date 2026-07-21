@@ -65,6 +65,10 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
 
 app.get("/", (req: Request, res: Response) => {
   res.send("backend is working");
+
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).json({ status: "ok" });
+});
 });
 
 app.post("/login", (req: Request, res: Response) => {
