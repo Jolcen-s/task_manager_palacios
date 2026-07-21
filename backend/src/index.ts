@@ -10,6 +10,7 @@ const SECRET_KEY = process.env.JWT_SECRET || "mi_clave_secreta";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+throw new Error("fallo simulado");
 
 const connectionString = process.env.DATABASE_URL;
 
