@@ -94,6 +94,13 @@ jobs:
           --health-interval 5s
           --health-timeout 5s
           --health-retries 5
+    defaults:
+      run:
+        working-directory: ./backend
+    env:
+      DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb
+      JWT_SECRET: test-secret-e2e
+      PORT: 3000
 
     steps:
       - uses: actions/checkout@v4
@@ -104,31 +111,15 @@ jobs:
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
 
-      - name: Crear .env del backend
-        working-directory: ./backend
-        run: |
-          echo "DATABASE_URL=postgresql://testuser:testpass@localhost:5432/testdb" > .env
-          echo "JWT_SECRET=test-secret-e2e" >> .env
-          echo "PORT=3000" >> .env
+      - run: npm ci
 
-      - name: Instalar dependencias del backend
-        working-directory: ./backend
-        run: npm ci
+      - run: npx prisma generate
 
-      - name: Generar cliente Prisma
-        working-directory: ./backend
-        run: npx prisma generate
+      - run: npx prisma migrate deploy
 
-      - name: Migrar base de datos
-        working-directory: ./backend
-        run: npx prisma migrate deploy
-
-      - name: Compilar backend
-        working-directory: ./backend
-        run: npm run build
+      - run: npm run build
 
       - name: Iniciar backend en background
-        working-directory: ./backend
         run: node dist/index.js &
         env:
           DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb
