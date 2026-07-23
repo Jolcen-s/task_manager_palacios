@@ -106,18 +106,27 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
 
       - name: Instalar dependencias del backend
         working-directory: ./backend
         run: npm ci
 
+      - name: Generar cliente Prisma
+        working-directory: ./backend
+        run: npx prisma generate
+
       - name: Migrar base de datos
         working-directory: ./backend
         run: npx prisma migrate deploy
 
+      - name: Compilar backend
+        working-directory: ./backend
+        run: npm run build
+
       - name: Iniciar backend en background
         working-directory: ./backend
-        run: npm start &
+        run: node dist/index.js &
         env:
           DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb
           JWT_SECRET: test-secret-e2e
@@ -126,12 +135,17 @@ jobs:
       - name: Esperar que el backend arranque
         run: |
           for i in $(seq 1 30); do
-            curl -s http://localhost:3000 > /dev/null 2>&1 && echo "Backend listo" && exit 0
+            curl -s http://localhost:3000/health > /dev/null 2>&1 && echo "Backend listo" && exit 0
             echo "Esperando... ($i/30)"
             sleep 2
           done
           echo "Backend no respondió"
           exit 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
       - run: npm ci
 
