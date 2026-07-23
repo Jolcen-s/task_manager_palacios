@@ -80,10 +80,6 @@ jobs:
     name: Pruebas E2E
     needs: [build, migraciones]
     runs-on: ubuntu-latest
-    env:
-      DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb
-      JWT_SECRET: test-secret-e2e
-      PORT: 3000
     services:
       postgres:
         image: postgres:16-alpine
@@ -108,13 +104,16 @@ jobs:
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
 
+      - name: Crear .env del backend
+        working-directory: ./backend
+        run: |
+          echo "DATABASE_URL=postgresql://testuser:testpass@localhost:5432/testdb" > .env
+          echo "JWT_SECRET=test-secret-e2e" >> .env
+          echo "PORT=3000" >> .env
+
       - name: Instalar dependencias del backend
         working-directory: ./backend
         run: npm ci
-
-      - name: Generar cliente Prisma
-        working-directory: ./backend
-        run: npx prisma generate
 
       - name: Migrar base de datos
         working-directory: ./backend
