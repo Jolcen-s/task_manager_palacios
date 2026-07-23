@@ -76,9 +76,74 @@ jobs:
       - run: npx prisma migrate deploy
       - run: npx prisma db seed
 
+  e2e:
+    name: Pruebas E2E
+    needs: [build, migraciones]
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb
+      JWT_SECRET: test-secret-e2e
+      PORT: 3000
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias del backend
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Migrar base de datos
+        working-directory: ./backend
+        run: npx prisma migrate deploy
+
+      - name: Iniciar backend en background
+        working-directory: ./backend
+        run: npm start &
+        env:
+          DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb
+          JWT_SECRET: test-secret-e2e
+          PORT: 3000
+
+      - name: Esperar que el backend arranque
+        run: |
+          for i in $(seq 1 30); do
+            curl -s http://localhost:3000 > /dev/null 2>&1 && echo "Backend listo" && exit 0
+            echo "Esperando... ($i/30)"
+            sleep 2
+          done
+          echo "Backend no respondió"
+          exit 1
+
+      - run: npm ci
+
+      - name: Instalar navegadores de Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Ejecutar pruebas E2E
+        run: npx playwright test
+
   deploy-staging:
     name: Deploy a Staging
-    needs: [build, pruebas, migraciones]
+    needs: [build, pruebas, migraciones, e2e]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
