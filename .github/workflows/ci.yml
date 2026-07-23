@@ -115,6 +115,10 @@ jobs:
         working-directory: ./backend
         run: npm ci
 
+      - name: Generar cliente Prisma
+        working-directory: ./backend
+        run: npx prisma generate
+
       - name: Migrar base de datos
         working-directory: ./backend
         run: npx prisma migrate deploy
