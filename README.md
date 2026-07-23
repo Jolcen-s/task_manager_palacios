@@ -39,3 +39,4 @@ PostgreSQL con migraciones y seeds gestionados con Prisma.
 <--version e2e habilitado -->
 <--demostracion -->
 <--demostracion -->
+<!-- verificacion sesion 8 -->
